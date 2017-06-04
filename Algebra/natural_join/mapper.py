@@ -1,32 +1,23 @@
-import sys
+#!/usr/local/bin/python3
+import fileinput
+import json
 
+JOIN_COLUMN_INDEX = {
+    'Orders': 1,
+    'Customers': 0
+}
 
-def main():
+for line in fileinput.input():
+    if line and line.strip():
+        words = line.split("\t")
 
-    order_id, user_id, date, customer_id, customer_name, customer_lastname, customer_city\
-        = "", "", "", "", "", "", ""
+        table_name = words[0]
+        data = words[1:]
 
-    for incoming in sys.stdin:
-        line = incoming.strip()
+        join_column_index = JOIN_COLUMN_INDEX[table_name]
+        map_key = data[join_column_index]
+        map_value = json.dumps((table_name, data[0:join_column_index] + data[join_column_index + 1:]))
 
-        if len(line) == 0:
-            continue
+        # print("table name %s, value %s " % (table_name, value))
+        print("%s\t%s" % (map_key, map_value))
 
-        elements = line.split('\t')
-
-        # only orders
-        if len(elements) == 4:
-            order_id = elements[1]
-            user_id = elements[2]
-            date = elements[3]
-        else:
-            # now user data
-            customer_id = elements[1]
-            customer_name = elements[2]
-            customer_lastname = elements[3]
-            customer_city = elements[4]
-
-        print customer_city
-
-
-main()
