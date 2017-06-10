@@ -7,32 +7,17 @@ groups = defaultdict(list)
 
 
 def reduce_natural_join(key, list_of_relation_data):
-    # two tables here, we can match the result
     group_by_table = defaultdict(list)
+    result_dict = {}
     for d in list_of_relation_data:
         group_by_table[d[0]].append(d[1])
-    # contents = [d[1] for d in list_of_relation_data]
 
-    if (len(group_by_table) == 2):
+    if len(group_by_table) == 2:
         keys = list(group_by_table.keys())
         for record in group_by_table[keys[0]]:
             for r2 in group_by_table[keys[1]]:
                 row = record + [key] + r2
                 print("%s\t%s" % (key, json.dumps(row)))
-
-
-                # for table_name in group_by_table:
-                #     for table_name_2 in group_by_table:
-                #         if table_name != table_name_2:
-                #             for row in group_by_table[table_name]:
-                #                 for row2 in group_by_table[table_name_2]:
-                #                     print("PROPOSAL: ", row, row2)
-                #
-                # contents = [item for sublist in contents for item in sublist]
-                # contents.append(key)
-
-                # print("%s\t%s" % (key, json.dumps(contents)))
-
 
 for line in fileinput.input():
     parts = line.split()
@@ -40,7 +25,6 @@ for line in fileinput.input():
     relation_data = json.loads(' '.join(parts[1:]))
     groups[relation_column_val].append(relation_data)
 
-print(groups)
 
 for k in groups:
     reduce_natural_join(k, groups[k])
